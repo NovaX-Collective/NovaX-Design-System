@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7fbf7">
+  <meta name="description" content="NovaX color palettes and interface components.">
+  <title>NovaX Design System</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="./" aria-label="NovaX Design System home">
+      <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+      <span><strong>NovaX</strong><small>Design system</small></span>
+    </a>
+    <div class="top-actions">
+      <button class="icon-button" id="theme-toggle" type="button" aria-label="Switch to dark theme" title="Theme">
+        <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 18a6 6 0 1 1 0-12 6 6 0 0 1 0 12Zm0-16h1v3h-2V2h1Zm0 17h1v3h-2v-3h1ZM2 11h3v2H2v-2Zm17 0h3v2h-3v-2ZM4.22 5.64l1.42-1.42 2.12 2.12-1.42 1.42-2.12-2.12Zm12.02 12.02 1.42-1.42 2.12 2.12-1.42 1.42-2.12-2.12ZM4.22 18.36l2.12-2.12 1.42 1.42-2.12 2.12-1.42-1.42ZM16.24 6.34l2.12-2.12 1.42 1.42-2.12 2.12-1.42-1.42Z"/></svg>
+      </button>
+      <a class="icon-button" href="https://github.com/Just-Nova23/NovaX-Design-System" aria-label="Open GitHub repository" title="GitHub">
+        <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 .7A11.5 11.5 0 0 0 8.36 23.1c.58.1.79-.25.79-.56v-2.02c-3.22.7-3.9-1.36-3.9-1.36-.52-1.34-1.28-1.7-1.28-1.7-1.05-.72.08-.71.08-.71 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.57-.29-5.27-1.28-5.27-5.69 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.47.11-3.05 0 0 .97-.31 3.16 1.18a10.98 10.98 0 0 1 5.76 0c2.2-1.49 3.16-1.18 3.16-1.18.63 1.58.23 2.76.11 3.05.74.81 1.19 1.83 1.19 3.09 0 4.42-2.7 5.39-5.28 5.68.42.36.79 1.07.79 2.16v3.04c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .7Z"/></svg>
+      </a>
+    </div>
+  </header>
+
+  <main class="layout">
+    <aside class="picker" aria-label="Palette picker">
+      <div class="picker-head">
+        <div><p class="eyebrow">Color palettes</p><h1>Choose a palette</h1></div>
+        <span id="palette-count" class="count"></span>
+      </div>
+      <label class="search">
+        <svg aria-hidden="true" viewBox="0 0 24 24"><path d="m20.7 19.3-4.2-4.2a7.5 7.5 0 1 0-1.4 1.4l4.2 4.2 1.4-1.4ZM5 10.5a5.5 5.5 0 1 1 11 0 5.5 5.5 0 0 1-11 0Z"/></svg>
+        <input id="palette-search" type="search" placeholder="Search palettes" autocomplete="off">
+      </label>
+      <div class="filters" id="family-filters" aria-label="Filter by color family"></div>
+      <div class="palette-list" id="palette-list"></div>
+      <div class="no-results" id="no-results" hidden>No palettes found</div>
+    </aside>
+
+    <section class="workspace">
+      <div class="palette-title-row">
+        <div><p class="eyebrow" id="palette-meta"></p><h2 id="palette-title"></h2><p id="palette-description" class="subtle"></p></div>
+        <div class="export-actions"><button class="tonal-button" id="copy-css" type="button">Copy CSS</button><button class="tonal-button" id="copy-json" type="button">Copy JSON</button></div>
+      </div>
+
+      <section aria-labelledby="tokens-title">
+        <div class="section-heading"><h3 id="tokens-title">Color tokens</h3><span>Tap any color to copy</span></div>
+        <div class="swatches" id="swatches"></div>
+      </section>
+
+      <section aria-labelledby="preview-title">
+        <div class="section-heading"><h3 id="preview-title">Interface preview</h3><span>Real NovaX components</span></div>
+        <div class="component-nav" id="component-nav" role="tablist" aria-label="Component groups">
+          <button role="tab" aria-selected="true" data-panel="core">Core</button>
+          <button role="tab" aria-selected="false" data-panel="forms">Forms</button>
+          <button role="tab" aria-selected="false" data-panel="feedback">Feedback</button>
+          <button role="tab" aria-selected="false" data-panel="data">Data</button>
+        </div>
+
+        <div class="preview-shell">
+          <div class="preview-appbar">
+            <div class="preview-logo"></div><strong>NovaX Product</strong><span class="spacer"></span>
+            <button class="demo-icon" aria-label="Search"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="m20.7 19.3-4.2-4.2a7.5 7.5 0 1 0-1.4 1.4l4.2 4.2 1.4-1.4ZM5 10.5a5.5 5.5 0 1 1 11 0 5.5 5.5 0 0 1-11 0Z"/></svg></button>
+            <button class="avatar" aria-label="Account">N</button>
+          </div>
+
+          <div class="component-panel active" data-panel="core">
+            <div class="demo-grid">
+              <article class="demo-card object-card"><span class="status-dot"></span><div><strong>Example server</strong><small>Minetest Game</small><small>Running</small></div><button class="demo-icon" aria-label="Open"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="m9.3 4.3 7.7 7.7-7.7 7.7-1.4-1.4 6.3-6.3-6.3-6.3 1.4-1.4Z"/></svg></button></article>
+              <article class="demo-card"><p class="eyebrow">Actions</p><h4>Buttons</h4><div class="button-row"><button class="primary-button">Continue</button><button class="tonal-button">Later</button><button class="text-button">Cancel</button></div><div class="button-row"><button class="demo-icon filled" aria-label="Add"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M11 5h2v6h6v2h-6v6h-2v-6H5v-2h6V5Z"/></svg></button><button class="demo-icon" aria-label="Copy"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M8 8h11v11H8V8Zm2 2v7h7v-7h-7ZM5 5h10v2H7v8H5V5Z"/></svg></button><button class="demo-icon danger" aria-label="Delete"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M8 3h8l1 2h4v2H3V5h4l1-2Zm-2 6h12l-1 12H7L6 9Zm3 2v8h2v-8H9Zm4 0v8h2v-8h-2Z"/></svg></button></div></article>
+              <article class="demo-card menu-card"><p class="eyebrow">Simple menu</p><button><span class="menu-symbol">A</span><strong>Account</strong><i>›</i></button><button><span class="menu-symbol">S</span><strong>Settings</strong><i>›</i></button><button><span class="menu-symbol">?</span><strong>Support</strong><i>›</i></button></article>
+              <article class="demo-card"><p class="eyebrow">Chips</p><div class="chip-row"><span class="chip selected">Selected</span><span class="chip">Compatible</span><span class="chip warning">Starting</span><span class="chip error">Error</span></div></article>
+            </div>
+          </div>
+
+          <div class="component-panel" data-panel="forms">
+            <div class="demo-grid">
+              <article class="demo-card form-card"><h4>Server settings</h4><label class="field"><span>Server name</span><input value="Example server"></label><label class="field"><span>Maximum players</span><input type="number" value="8"></label><label class="select-field"><span>Map generator</span><select><option>v7</option><option>Carpathian</option><option>Valleys</option></select></label></article>
+              <article class="demo-card toggles"><h4>Preferences</h4><label><span><strong>External link</strong></span><input class="switch" type="checkbox" checked></label><label><span><strong>Damage</strong></span><input class="switch" type="checkbox" checked></label><label><span><strong>Auto off</strong><small>Stops after the selected time</small></span><input class="switch" type="checkbox"></label></article>
+              <article class="demo-card"><h4>Selection</h4><div class="segmented"><button class="active">Games</button><button>Mods</button><button>Textures</button></div><div class="radio-list"><label><input type="radio" name="engine" checked> Luanti 5.16.1</label><label><input type="radio" name="engine"> Luanti 5.15.2</label></div></article>
+            </div>
+          </div>
+
+          <div class="component-panel" data-panel="feedback">
+            <div class="demo-grid">
+              <article class="demo-card"><p class="eyebrow">Progress</p><h4>Installing engine</h4><div class="progress"><span style="width:64%"></span></div><small>64%</small><div class="spinner-row"><span class="spinner"></span><span>Starting</span></div></article>
+              <article class="demo-card message-card"><span class="message-icon">!</span><div><h4>ContentDB unavailable</h4><p>Try again in a moment.</p><button class="text-button">Retry</button></div></article>
+              <article class="demo-card empty-card"><span class="empty-icon"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M11 5h2v6h6v2h-6v6h-2v-6H5v-2h6V5Z"/></svg></span><h4>No servers yet</h4></article>
+              <article class="demo-card"><p class="eyebrow">Dialog</p><h4>Delete this server?</h4><p class="subtle">This permanently removes its world and backups.</p><div class="button-row end"><button class="text-button">Cancel</button><button class="danger-button">Delete</button></div></article>
+            </div>
+            <div class="snackbar"><span>Username updated</span><button>Dismiss</button></div>
+          </div>
+
+          <div class="component-panel" data-panel="data">
+            <div class="demo-grid wide">
+              <article class="demo-card table-card"><div class="table-head"><h4>Players</h4><button class="demo-icon" aria-label="Refresh"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M17.7 6.3A8 8 0 1 0 20 12h-2a6 6 0 1 1-1.7-4.2L13 11h8V3l-3.3 3.3Z"/></svg></button></div><div class="table-row"><span class="user-circle">A</span><strong>Alex</strong><span>Online</span><button class="demo-icon" aria-label="Open"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="m9.3 4.3 7.7 7.7-7.7 7.7-1.4-1.4 6.3-6.3-6.3-6.3 1.4-1.4Z"/></svg></button></div><div class="table-row"><span class="user-circle">S</span><strong>Sam</strong><span>Offline</span><button class="demo-icon" aria-label="Open"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="m9.3 4.3 7.7 7.7-7.7 7.7-1.4-1.4 6.3-6.3-6.3-6.3 1.4-1.4Z"/></svg></button></div></article>
+              <article class="demo-card console-card"><div class="console-head"><strong>Console</strong><button class="demo-icon" aria-label="Copy console"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M8 8h11v11H8V8Zm2 2v7h7v-7h-7ZM5 5h10v2H7v8H5V5Z"/></svg></button></div><pre>[Server] World loaded
+[Server] Listening on 0.0.0.0:30000
+[Join] Alex connected</pre></article>
+            </div>
+          </div>
+        </div>
+      </section>
+    </section>
+  </main>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="palettes.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
