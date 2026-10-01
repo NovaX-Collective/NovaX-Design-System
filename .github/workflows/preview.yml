@@ -78,11 +78,12 @@ jobs:
         env:
           OIDC_TOKEN: ${{ steps.oidc.outputs.token }}
           SLUG: ${{ steps.preview.outputs.slug }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
         run: |
           curl --fail-with-body --silent --show-error \
             -H "Authorization: Bearer $OIDC_TOKEN" \
             -F "slug=$SLUG" -F "repository=$GITHUB_REPOSITORY" \
-            -F "sha=$GITHUB_SHA" -F "ref=$GITHUB_REF" \
+            -F "sha=$GITHUB_SHA" -F "ref=$GITHUB_REF" -F "title=$PR_TITLE" \
             -F "artifact=@$RUNNER_TEMP/preview.zip;type=application/zip" \
             "$PREVIEW_API/api/v1/deployments/static"
           echo "Preview: https://$SLUG-preview.novaxhosting.com" >> "$GITHUB_STEP_SUMMARY"
