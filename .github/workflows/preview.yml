@@ -1,0 +1,89 @@
+name: NovaX private preview
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, closed]
+  workflow_dispatch:
+    inputs:
+      slug:
+        description: Preview slug
+        required: true
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: preview-${{ github.repository }}-${{ github.event.pull_request.number || inputs.slug }}
+  cancel-in-progress: true
+
+jobs:
+  preview:
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      PREVIEW_API: https://preview.novaxhosting.com
+      OUTPUT_DIR: public-build
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        if: github.event.action != 'closed'
+        with:
+          node-version: 24
+      - name: Build the web app for the static gateway
+        if: github.event.action != 'closed'
+        run: |
+          mkdir -p public-build
+          cp index.html styles.css app.js palettes.js public-build/
+      - name: Choose slug
+        id: preview
+        env:
+          REPO_NAME: ${{ github.event.repository.name }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          MANUAL_SLUG: ${{ inputs.slug }}
+        run: |
+          if [[ "$GITHUB_EVENT_NAME" == "pull_request" ]]; then
+            slug="$(echo "$REPO_NAME-pr-$PR_NUMBER" | tr '[:upper:]_' '[:lower:]-')"
+          else
+            slug="$MANUAL_SLUG"
+          fi
+          [[ "$slug" =~ ^[a-z0-9]+(-[a-z0-9]+)*$ ]] || { echo "Invalid preview slug"; exit 1; }
+          echo "slug=$slug" >> "$GITHUB_OUTPUT"
+      - name: Obtain GitHub OIDC token
+        id: oidc
+        run: |
+          token="$(curl --fail --silent --show-error \
+            -H "Authorization: Bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
+            "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=novax-preview" | jq -er .value)"
+          echo "::add-mask::$token"
+          echo "token=$token" >> "$GITHUB_OUTPUT"
+      - name: Remove closed preview
+        if: github.event.action == 'closed'
+        env:
+          OIDC_TOKEN: ${{ steps.oidc.outputs.token }}
+          SLUG: ${{ steps.preview.outputs.slug }}
+        run: |
+          curl --fail-with-body --silent --show-error -X DELETE \
+            -H "Authorization: Bearer $OIDC_TOKEN" \
+            "$PREVIEW_API/api/v1/deployments/$SLUG"
+      - name: Package preview
+        if: github.event.action != 'closed'
+        run: |
+          printf '{"repository":"%s","sha":"%s","ref":"%s"}\n' "$GITHUB_REPOSITORY" "$GITHUB_SHA" "$GITHUB_REF" > "$OUTPUT_DIR/deployment.json"
+          cd "$OUTPUT_DIR"
+          zip -q -r "$RUNNER_TEMP/preview.zip" .
+      - name: Publish preview
+        if: github.event.action != 'closed'
+        env:
+          OIDC_TOKEN: ${{ steps.oidc.outputs.token }}
+          SLUG: ${{ steps.preview.outputs.slug }}
+        run: |
+          curl --fail-with-body --silent --show-error \
+            -H "Authorization: Bearer $OIDC_TOKEN" \
+            -F "slug=$SLUG" -F "repository=$GITHUB_REPOSITORY" \
+            -F "sha=$GITHUB_SHA" -F "ref=$GITHUB_REF" \
+            -F "artifact=@$RUNNER_TEMP/preview.zip;type=application/zip" \
+            "$PREVIEW_API/api/v1/deployments/static"
+          echo "Preview: https://$SLUG-preview.novaxhosting.com" >> "$GITHUB_STEP_SUMMARY"
+
